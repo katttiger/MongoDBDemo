@@ -9,6 +9,4 @@ public interface MovieDAO {
 
     List<Document> findAll();
 
-    void printAll(List<Document> collection);
-
 }

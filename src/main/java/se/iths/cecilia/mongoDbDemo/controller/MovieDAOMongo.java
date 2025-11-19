@@ -41,12 +41,4 @@ public class MovieDAOMongo implements MovieDAO {
         documents.forEach(documentList::add);
         return documentList;
     }
-
-    public void printAll(List<Document> documentList) {
-        for (Document document : documentList) {
-            System.out.println(document.toJson());
-        }
-    }
-
-
 }

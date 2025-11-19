@@ -9,18 +9,6 @@ public interface MovieDAO {
 
     List<Document> findAll();
 
-    Document findByTitle(String title);
-
     void printAll(List<Document> collection);
-
-    void updateYear(String title, int year);
-
-    void deleteAllFromDatabase();
-
-    void updateMoviesProducedBeforeYear2000();
-
-    void deleteMoviesProducedBeforeYear1995();
-
-    void deleteByTitle(String title);
 
 }

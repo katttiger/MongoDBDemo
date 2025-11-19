@@ -15,17 +15,9 @@ public class DbContext {
         client = connectToDatabase();
         MongoDatabase database = getDatabase(client);
         MongoCollection<Document> collection = getCollection(database);
-        seedData(new MovieDAOMongo(collection));
         return collection;
     }
 
-    private static void seedData(MovieDAO movieDAO) {
-        movieDAO.insert("James Bond: Golden eye", 1995);
-        movieDAO.insert("Pulp Fiction", 1992);
-        movieDAO.insert("The Lord of the Rings", 2001);
-        movieDAO.insert("Den gode, den onde, den fule", 1966);
-        movieDAO.insert("Tillbaka till framtiden", 1985);
-    }
 
     private static MongoClient connectToDatabase() {
         MongoClient client = MongoClients.create(uri);

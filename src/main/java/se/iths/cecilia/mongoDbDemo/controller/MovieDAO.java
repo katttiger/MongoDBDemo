@@ -15,6 +15,12 @@ public interface MovieDAO {
 
     void updateYear(String title, int year);
 
+    void deleteAllFromDatabase();
+
+    void updateMoviesProducedBeforeYear2000();
+
+    void deleteMoviesProducedBeforeYear1995();
+
     void deleteByTitle(String title);
 
 }

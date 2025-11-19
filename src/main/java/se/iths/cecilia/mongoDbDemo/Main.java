@@ -1,84 +1,77 @@
 package se.iths.cecilia.mongoDbDemo;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import se.iths.cecilia.mongoDbDemo.controller.DbContext;
 import se.iths.cecilia.mongoDbDemo.controller.MovieDAO;
 import se.iths.cecilia.mongoDbDemo.controller.MovieDAOMongo;
 
 public class Main {
     public static void main(String[] args) {
-        MongoCollection<Document> collection = setup();
+        MongoCollection<Document> collection = DbContext.setup();
         MovieDAO movieDAO = new MovieDAOMongo(collection);
-        movieDAO.insert("MovieDoneIn2014", 1952);
 
-        System.out.println("\nFind all:\n");
-        movieDAO.printAll(movieDAO.findAll());
+        findAllItems(movieDAO);
 
-        System.out.println("""
-                
-                ---
-                
-                Find one item:
-                """);
-        System.out.println(movieDAO.findByTitle("MovieDoneIn2014"));
+        addOneItem(movieDAO);
+        findAllItems(movieDAO);
 
-        System.out.println("""
-                
-                ---
-                
-                Update movie year:
-                """);
-        movieDAO.updateYear("MovieDoneIn2014", 2014);
+        findOneItem(movieDAO);
+        updateMovieYear(movieDAO);
 
-        System.out.println("""
-                
-                ---
-                
-                Delete movie:
-                """);
+        deleteOldMovies(movieDAO);
+        findAllItems(movieDAO);
+
+        updateMovieYearsThatAreLowerThanTwothousand(movieDAO);
+        findAllItems(movieDAO);
+
+        deleteOneMovie(movieDAO);
+        findAllItems(movieDAO);
+
+        deleteAllMovies(movieDAO);
+        findAllItems(movieDAO);
+
+        DbContext.closeAllConnections();
+    }
+
+    private static void deleteOldMovies(MovieDAO movieDAO) {
+        System.out.println("Delete movies produced before year 1995");
+        movieDAO.deleteMoviesProducedBeforeYear1995();
+    }
+
+    private static void updateMovieYearsThatAreLowerThanTwothousand(MovieDAO movieDAO) {
+        System.out.println("Updating movie years that are not larger than 2000");
+        movieDAO.updateMoviesProducedBeforeYear2000();
+    }
+
+    private static void deleteAllMovies(MovieDAO movieDAO) {
+        System.out.println("Delete all movies in database");
+        movieDAO.deleteAllFromDatabase();
+    }
+
+    private static void deleteOneMovie(MovieDAO movieDAO) {
+        System.out.println("Delete one movie in database");
         movieDAO.deleteByTitle("MovieDoneIn2014");
+    }
 
-        System.out.println("""
-                
-                ---
-                
-                Find all:
-                """);
+    private static void updateMovieYear(MovieDAO movieDAO) {
+        System.out.println("Updating movie year for one movie");
+        movieDAO.updateYear("MovieDoneIn2014", 2014);
+        System.out.println(movieDAO.findByTitle("MovieDoneIn2014"));
+    }
+
+    private static void addOneItem(MovieDAO movieDAO) {
+        System.out.println("Add one movie to database");
+        movieDAO.insert("MovieDoneIn2014", 1952);
+    }
+
+    private static void findOneItem(MovieDAO movieDAO) {
+        System.out.println("Find one movie in database");
+        System.out.println(movieDAO.findByTitle("MovieDoneIn2014"));
+    }
+
+    private static void findAllItems(MovieDAO movieDAO) {
+        System.out.println("Find all movies in database");
         movieDAO.printAll(movieDAO.findAll());
-
-        closeAllConnections();
-    }
-
-    private static final String uri = "mongodb+srv://this_db_user:BpT3YxkAslIsiWyw@cluster0.xsndhfu.mongodb.net/?appName=Cluster0";
-
-    private static MongoClient client;
-
-    public static MongoCollection<Document> setup() {
-        client = connectToDatabase();
-        MongoDatabase database = getDatabase(client);
-        MongoCollection<Document> collection = getCollection(database);
-        return collection;
-    }
-
-    private static MongoClient connectToDatabase() {
-        MongoClient client = MongoClients.create(uri);
-        return client;
-    }
-
-    private static MongoDatabase getDatabase(MongoClient client) {
-        MongoDatabase database = client.getDatabase("MovieDb");
-        return database;
-    }
-
-    private static MongoCollection<Document> getCollection(MongoDatabase database) {
-        MongoCollection<Document> collection = database.getCollection("Movies");
-        return collection;
-    }
-
-    public static void closeAllConnections() {
-        client.close();
     }
 }

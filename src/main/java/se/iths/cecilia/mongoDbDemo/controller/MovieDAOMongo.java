@@ -79,6 +79,42 @@ public class MovieDAOMongo implements MovieDAO {
         }
     }
 
+    public void updateMoviesProducedBeforeYear2000() {
+        Bson filter = Filters.lt("year", 2000);
+        Bson update = Updates.set("year", 1900);
+        UpdateResult result = collection.updateMany(filter, update);
+
+        if (result.wasAcknowledged()) {
+            System.out.println("Update successful. \nNumber of documents updated: " + result.getModifiedCount());
+        } else {
+            System.out.println("Update failed");
+        }
+
+    }
+
+    @Override
+    public void deleteMoviesProducedBeforeYear1995() {
+        Bson filter = Filters.lt("year", 1995);
+        DeleteResult result = collection.deleteMany(filter);
+        if (result.wasAcknowledged()) {
+            System.out.println("Delete successful. \nNumber of documents deleted: " + result.getDeletedCount());
+        } else {
+            System.out.println("Delete failed");
+        }
+    }
+
+    @Override
+    public void deleteAllFromDatabase() {
+        Bson filter = Filters.lt("year", 3000);
+        DeleteResult result = collection.deleteMany(filter);
+
+        if (result.wasAcknowledged()) {
+            System.out.println("Delete all successful.\nNumber of documents deleted: " + result.getDeletedCount());
+        } else {
+            System.out.println("Delete all failed");
+        }
+    }
+
     public void deleteByTitle(String title) {
         Bson filter = Filters.eq("title", title);
 
